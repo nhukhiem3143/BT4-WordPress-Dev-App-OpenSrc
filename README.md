@@ -308,16 +308,20 @@ wp_terms          wp_usermeta      wp_users
 **Tạo tài khoản admin:**
 1. Truy cập `https://n8n.nhukhiem.id.vn`
 2. Điền đầy đủ thông tin: First name, Last name, **Email** (quan trọng!), Password
-3. Chọn **"Send me a License key"** → điền thông tin → Submit
-4. Kiểm tra email để lấy **License Key**
-
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/9b6aaee0-ac8d-423d-8e60-552a50b09a6e" />
+
+3. Chọn **"Send me a License key"** → điền thông tin → Submit
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/d012496c-09c4-4bf9-aa84-989dc7bc8099" />
+
+4. Kiểm tra email để lấy **License Key**
+<img width="1919" height="1079" alt="Screenshot 2026-05-21 173029" src="https://github.com/user-attachments/assets/46d266ed-d02d-468c-b13c-7ed3170907d2" />
 
 **Activate License:**
 ```
 SETTING (góc dưới trái) → Usage and Plan → Enter activation key → Paste key → Activate
 ```
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/871a02e0-dd5e-4285-a9e8-272217efbd1d" />
+
 > ✅ Thông báo thành công: *"Your Registered Community Edition has been successfully activated."*
 
 ---
