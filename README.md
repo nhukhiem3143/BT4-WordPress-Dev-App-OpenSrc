@@ -248,7 +248,7 @@ docker compose ps
 
 ### Bước 3 – Cấu Hình Cloudflare Tunnel
 
-Truy cập **Cloudflare Dashboard → Zero Trust → Networks → Tunnels → [Tunnel của bạn] → Configure → Public Hostnames**
+Truy cập **Cloudflare Dashboard → Zero Trust → Networks → Tunnels → wordpress-tunnel → Configure → Public Hostnames**
 
 Thêm **3 router** như sau:
 
@@ -257,6 +257,16 @@ Thêm **3 router** như sau:
 | `wordpress.nhukhiem.id.vn` | `http://wordpress:80` | *(đã có từ BT3)* |
 | `phpmyadmin.nhukhiem.id.vn` | `http://phpmyadmin:80` | Thêm mới |
 | `n8n.nhukhiem.id.vn` | `http://n8n:5678` | Thêm mới |
+
+##### Thêm tunnel cho phpmyadmin
+<img width="1913" height="1079" alt="image" src="https://github.com/user-attachments/assets/9070cdf8-a285-4995-b71e-fc87b8f0e4eb" />
+
+##### Thêm tunnel cho n8n
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/3598f577-6cfa-4cf0-b4f3-3ce2dff90703" />
+
+##### Kết quả 
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/9b9b08ff-29f3-4519-80f6-ccafc474e3c3" />
+
 
 > 💡 Tên service trong URL tunnel phải khớp với tên service trong `docker-compose.yml`.
 
@@ -300,6 +310,9 @@ wp_terms          wp_usermeta      wp_users
 2. Điền đầy đủ thông tin: First name, Last name, **Email** (quan trọng!), Password
 3. Chọn **"Send me a License key"** → điền thông tin → Submit
 4. Kiểm tra email để lấy **License Key**
+
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/9b6aaee0-ac8d-423d-8e60-552a50b09a6e" />
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/d012496c-09c4-4bf9-aa84-989dc7bc8099" />
 
 **Activate License:**
 ```
