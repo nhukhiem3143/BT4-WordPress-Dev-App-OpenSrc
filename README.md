@@ -181,8 +181,8 @@ BT4-WordPress-N8N/
 
 ```bash
 # Clone repository
-git clone https://github.com/nhukhiem3143/BT4-WordPress-N8N.git
-cd BT4-WordPress-N8N
+git clone https://github.com/nhukhiem3143/BT4-WordPress-Dev-App-OpenSrc.git
+cd wordpress-project
 
 # Tạo file .env từ template
 cp .env.example .env
@@ -192,16 +192,28 @@ Mở `.env` và điền đầy đủ thông tin:
 
 ```env
 # === MARIADB DATABASE ===
-MYSQL_ROOT_PASSWORD=your_root_password
-MYSQL_DATABASE=wordpress_db
-MYSQL_USER=wp_user
-MYSQL_PASSWORD=your_db_password
+MYSQL_ROOT_PASSWORD=
+MYSQL_DATABASE=
+MYSQL_USER=
+MYSQL_PASSWORD=
 
-# === CLOUDFLARE TUNNEL ===
-CLOUDFLARED_TUNNEL_TOKEN=your_tunnel_token_here
+# === WORDPRESS ===
+WORDPRESS_DB_HOST=mariadb:3306
+WORDPRESS_TABLE_PREFIX=wp_
+
+# === PORTS ===
+WORDPRESS_PORT=8080
+PHPMYADMIN_PORT=8083
+N8N_PORT=5678
 
 # === N8N ===
-N8N_WEBHOOK_URL=https://n8n.nhukhiem.id.vn/
+N8N_WEBHOOK_URL=
+
+# === CLOUDFLARED TUNNEL ===
+CLOUDFLARED_TUNNEL_TOKEN=
+
+# === TIMEZONE (Optional) ===
+TZ=Asia/Ho_Chi_Minh
 ```
 
 > ⚠️ **Lưu ý:** Không commit file `.env` lên GitHub. File `.gitignore` đã loại trừ sẵn.
@@ -210,32 +222,25 @@ N8N_WEBHOOK_URL=https://n8n.nhukhiem.id.vn/
 
 ### Bước 2 – Chạy Docker Compose
 
+
+#### Pull tất cả images
 ```bash
-# Pull tất cả images
 docker compose pull
+```
 
-# Khởi chạy tất cả services ở chế độ nền
+<img width="1145" height="274" alt="image" src="https://github.com/user-attachments/assets/82c61cd1-132f-425a-885c-8640f8382ad7" />
+
+#### Khởi chạy tất cả services ở chế độ nền
+```bash
 docker compose up -d
+```
 
-# Kiểm tra trạng thái các service
+##### Kiểm tra trạng thái các service
+```bash
 docker compose ps
 ```
 
 **Kết quả mong đợi – tất cả `STATUS` phải là `running`:**
-
-```
-NAME                    IMAGE                          STATUS          PORTS
-wordpress_mariadb       mariadb:latest                 Up (healthy)    3306/tcp
-wordpress_phpmyadmin    phpmyadmin:latest              Up              0.0.0.0:8083->80/tcp
-wordpress_app           wordpress:latest               Up              0.0.0.0:8080->80/tcp
-wordpress_cloudflared   cloudflare/cloudflared:latest  Up
-wordpress_n8n           n8nio/n8n:latest               Up              0.0.0.0:5678->5678/tcp
-```
-
-```bash
-# Xem logs nếu có service lỗi
-docker compose logs -f <tên_service>
-```
 
 ---
 
