@@ -142,11 +142,8 @@ sequenceDiagram
 
 | Thành phần | Phiên bản tối thiểu |
 |---|---|
-| Ubuntu | 20.04 LTS |
-| Docker | 24.x |
-| Docker Compose | v2.x |
-| RAM | 2GB+ |
-| Disk | 10GB+ |
+| Ubuntu | 24.04.4 LTS |
+| Docker | 29.4.0 |
 
 **Tài khoản cần có trước:**
 - [x] Cloudflare account + domain đã cấu hình
@@ -163,12 +160,9 @@ BT4-WordPress-N8N/
 ├── 📄 .env                     # Biến môi trường (không commit)
 ├── 📄 .env.example             # Template biến môi trường
 ├── 📄 .gitignore
-├── 📁 n8n/
-│   └── 📄 code-node.js         # Code JS dùng trong n8n Code Node
 ├── 📁 volumes/                 # Dữ liệu persistent (auto tạo)
 │   ├── mariadb/
 │   ├── wordpress/
-│   ├── phpmyadmin/
 │   └── n8n/
 └── 📄 README.md
 ```
@@ -216,7 +210,7 @@ CLOUDFLARED_TUNNEL_TOKEN=
 TZ=Asia/Ho_Chi_Minh
 ```
 
-> ⚠️ **Lưu ý:** Không commit file `.env` lên GitHub. File `.gitignore` đã loại trừ sẵn.
+> ⚠️ **Lưu ý:** Không commit file `.env` lên GitHub.
 
 ---
 
@@ -272,35 +266,6 @@ Thêm **3 router** như sau:
 
 ---
 
-### Bước 4 – Cài Đặt WordPress
-
-**1. Kiểm tra CSDL trước khi cài:**
-- Truy cập `https://phpmyadmin.nhukhiem.id.vn`
-- Đăng nhập với user/password từ `.env`
-- Quan sát: database `wordpress_db` **chưa có bảng nào**
-
-**2. Cài đặt WordPress:**
-- Truy cập `https://wordpress.nhukhiem.id.vn`
-- Làm theo wizard cài đặt của WordPress
-- Điền thông tin: Tên site, admin, mật khẩu, email
-
-**3. Kiểm tra CSDL sau khi cài:**
-- Quay lại phpMyAdmin
-- Quan sát: database đã có **11 bảng** do WordPress tạo tự động
-
-```
-wp_commentmeta    wp_comments      wp_links
-wp_options        wp_postmeta      wp_posts
-wp_term_relationships  wp_term_taxonomy  wp_termmeta
-wp_terms          wp_usermeta      wp_users
-```
-
-**4. Tạo 2 bài viết thủ công trong WordPress:**
-- Bài 1: Giới thiệu bản thân (thông tin cá nhân, sở thích, có hình ảnh/video)
-- Bài 2: Kiến thức học được từ môn Phát triển ứng dụng với mã nguồn mở
-
----
-
 ## ⚙️ Cấu Hình N8N
 
 ### Bước 1 – Tạo Tài Khoản & Activate License
@@ -324,17 +289,24 @@ SETTING (góc dưới trái) → Usage and Plan → Enter activation key → Pas
 
 > ✅ Thông báo thành công: *"Your Registered Community Edition has been successfully activated."*
 
+<img width="1919" height="1079" alt="Screenshot 2026-05-21 195650" src="https://github.com/user-attachments/assets/9c5bb02d-cc06-47d3-a98e-72ff2a18d764" />
+
 ---
 
 ### Bước 2 – Tạo Telegram Bot
 
 1. Mở Telegram → tìm kiếm **@BotFather** → bắt đầu chat
 2. Gõ lệnh `/newbot`
-3. Đặt tên bot (vd: `NhuKhiem WordPress Bot`)
+3. Đặt tên bot (vd: `Bot_Wordpress`)
 4. Đặt username bot (phải kết thúc bằng `bot`, vd: `nhukhiem_wp_bot`)
 5. **Copy Token** được cấp (dạng: `1234567890:AAxxxxxxxxxxxxxx`)
 
+<img width="1257" height="997" alt="Screenshot 2026-05-21 200809" src="https://github.com/user-attachments/assets/3eb89597-72e4-4751-bd74-bd4a5a3c9f83" />
+
 > ⚠️ **Quan trọng:** Sau khi tạo bot, phải **chat lần đầu** với bot (nội dung bất kỳ) trước khi dùng trong n8n, nếu không webhook sẽ không nhận được message.
+
+#### Bot vừa tạo
+<img width="1225" height="994" alt="image" src="https://github.com/user-attachments/assets/df58bb00-dd81-46ef-a8e0-1831325a7cbb" />
 
 ---
 
@@ -345,6 +317,8 @@ SETTING (góc dưới trái) → Usage and Plan → Enter activation key → Pas
 3. Vào **API Keys** → **Create new API key**
 4. **Copy API Key** (chỉ hiển thị một lần)
 
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/e9c42a4c-3c9a-4b0f-a24f-4fedbe099c89" />
+
 ---
 
 ### Bước 4 – Tạo WordPress Application Password
@@ -353,7 +327,10 @@ SETTING (góc dưới trái) → Usage and Plan → Enter activation key → Pas
 2. **Users → Profile** (hoặc vào tài khoản admin)
 3. Kéo xuống phần **Application Passwords**
 4. Nhập tên: `n8n` → bấm **"Add New Application Password"**
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/78eb87bb-7370-465a-b1d3-e0409c97cdca" />
+
 5. **Copy chuỗi 24 ký tự** được tạo ra (chỉ hiển thị một lần)
+<img width="1919" height="1079" alt="Screenshot 2026-05-21 201839" src="https://github.com/user-attachments/assets/6ccf2b1e-b355-4e0b-aae8-e28718bd1cf7" />
 
 ---
 
@@ -368,6 +345,8 @@ Truy cập `https://n8n.nhukhiem.id.vn` → **Overview → Create Workflow**
 | Authentication | `Credential` |
 | Credential | Tạo mới → Paste **Telegram Bot Token** |
 | Updates | `message` |
+
+<img width="1919" height="979" alt="image" src="https://github.com/user-attachments/assets/4175373e-2858-4275-a57a-d6bf933c2005" />
 
 #### 🔷 Node 2: DeepSeek – Message a Model
 
