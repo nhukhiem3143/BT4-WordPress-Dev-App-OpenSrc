@@ -265,7 +265,34 @@ Thêm **3 router** như sau:
 > 💡 Tên service trong URL tunnel phải khớp với tên service trong `docker-compose.yml`.
 
 ---
+### Bước 4 – Cài Đặt WordPress
 
+**1. Kiểm tra CSDL trước khi cài:**
+- Truy cập `https://phpmyadmin.nhukhiem.id.vn`
+- Đăng nhập với user/password từ `.env`
+- Quan sát: database `wordpress_db` **chưa có bảng nào**
+
+**2. Cài đặt WordPress:**
+- Truy cập `https://wordpress.nhukhiem.id.vn`
+- Làm theo wizard cài đặt của WordPress
+- Điền thông tin: Tên site, admin, mật khẩu, email
+
+**3. Kiểm tra CSDL sau khi cài:**
+- Quay lại phpMyAdmin
+- Quan sát: database đã có **11 bảng** do WordPress tạo tự động
+
+```
+wp_commentmeta    wp_comments      wp_links
+wp_options        wp_postmeta      wp_posts
+wp_term_relationships  wp_term_taxonomy  wp_termmeta
+wp_terms          wp_usermeta      wp_users
+```
+
+**4. Tạo 2 bài viết thủ công trong WordPress:**
+- Bài 1: Giới thiệu bản thân (thông tin cá nhân, sở thích, có hình ảnh/video)
+- Bài 2: Kiến thức học được từ môn Phát triển ứng dụng với mã nguồn mở
+
+---
 ## ⚙️ Cấu Hình N8N
 
 ### Bước 1 – Tạo Tài Khoản & Activate License
@@ -476,7 +503,8 @@ return {
 | Content | `{{ $json.content }}` |
 | Status | `Publish` hoặc `Draft` |
 
-<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/84b3b66f-0a2d-4295-9667-cee02e7eba5f" />
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/d18d643b-f2d0-4728-b251-2602f8158e37" />
+
 
 ---
 
@@ -531,6 +559,15 @@ Publish
 
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/5c357fdf-67ee-4051-997a-d70ce70875d0" />
 
+### Kết quả
+#### Bài đăng Wordpress
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/6cee29fe-605d-47f7-8e49-21089dd0e84f" />
+
+#### Trang phpMyadmin
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/a763d40d-a90a-437e-9709-88cd1ce68b69" />
+
+#### Trang N8N
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/fe84be6f-63f1-4e5f-b672-c0acb979859d" />
 
 ---
 
