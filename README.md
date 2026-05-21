@@ -342,35 +342,105 @@ Truy cập `https://n8n.nhukhiem.id.vn` → **Overview → Create Workflow**
 
 | Trường | Giá trị |
 |---|---|
-| Authentication | `Credential` |
+| Authentication | `Credential to connect with` |
 | Credential | Tạo mới → Paste **Telegram Bot Token** |
-| Updates | `message` |
+| Trigger On | `Message` |
+| Additional Fields | Để trống |
 
-<img width="1919" height="979" alt="image" src="https://github.com/user-attachments/assets/4175373e-2858-4275-a57a-d6bf933c2005" />
+*Thêm key đã tạo từ @BotFather*
+<img width="1853" height="1079" alt="image" src="https://github.com/user-attachments/assets/03bf9a27-9551-4d59-936b-d1b77a1eabff" />
+
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/fdeac4eb-c52d-4ee0-9eef-c77ac30000c2" />
+
+
+##### 📌 Test Trigger
+
+1. Nhấn `Test This Trigger`
+2. Mở Telegram
+3. Gửi cho bot:
+   ```txt
+   /start
+4. Gửi tiếp: ```hello```
+<img width="1913" height="1030" alt="image" src="https://github.com/user-attachments/assets/f534dc27-d917-4ee8-94ec-e5ad209d3883" />
+
+5. Nếu thành công, node sẽ xuất hiện Output
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/5e5fc1df-6a23-4d7d-b6a0-de5a0baa365a" />
 
 #### 🔷 Node 2: DeepSeek – Message a Model
 
+
 | Trường | Giá trị |
 |---|---|
-| Credential | Tạo mới → Paste **DeepSeek API Key** |
-| Model | `deepseek-chat` |
-| Prompt | Kéo `message.text` từ panel trái vào → thêm hậu tố |
+| Credential | Chọn `DeepSeek account` |
+| Resource | `Chat` |
+| Operation | `Complete` |
+| Model | `deepseek-v4-flash` hoặc `deepseek-chat` |
+| Simplify | `ON` |
 
-**Nội dung Prompt:**
-```
-{{ $json.message.text }}. Kết quả sinh ra ở định dạng HTML+CSS để tôi dùng HTML+CSS này tạo bài viết cho wordpress. Trả về JSON với 2 trường: post_title (tiêu đề bài viết) và post_content (nội dung HTML đầy đủ).
-```
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/7ae1a408-ab5e-404b-a545-6abb2db2145d" />
 
-| Option | Giá trị |
+
+---
+
+##### 🔷 Prompt Message 1
+
+| Trường | Giá trị |
 |---|---|
-| Output Content as JSON | **BẬT** |
-| System Message (Add Option) | `Bạn là trợ lý viết bài blog chuyên nghiệp bằng tiếng Việt. Chỉ trả về JSON thuần túy, không có markdown fence.` |
+| Role | `System` |
+| Content | Nội dung bên dưới |
+
+```text
+Bạn là trợ lý viết bài blog chuyên nghiệp bằng tiếng Việt.  Nhiệm vụ: - Viết bài chuẩn SEO - Nội dung chi tiết - Có HTML đầy đủ - Có CSS inline đẹp - Chỉ trả về JSON thuần túy - Không dùng markdown - Không dùng ```json  JSON phải có đúng 2 field: {   "post_title": "...",   "post_content": "..." }
+```
+<img width="1140" height="963" alt="image" src="https://github.com/user-attachments/assets/03e66e92-798c-4f39-be5b-c978ca0e72f6" />
+
+---
+
+##### 🔷 Prompt Message 2
+
+Bấm:
+
+```text
+Add Message
+```
+
+rồi điền:
+
+| Trường | Giá trị |
+|---|---|
+| Role | `User` |
+| Content | Nội dung bên dưới |
+
+```javascript
+{{ $json.message.text }}
+
+Kết quả sinh ra ở định dạng HTML+CSS để tôi dùng HTML+CSS này tạo bài viết cho wordpress.
+
+Trả về JSON với 2 trường:
+- post_title
+- post_content
+```
+
+<img width="1262" height="1007" alt="image" src="https://github.com/user-attachments/assets/d86c9e2a-002f-4fa3-9f34-af04829ac016" />
+
+---
+
+##### 📌 Test Deepseek
+
+1. Nhấn `Execute step`
+2. Mở Telegram
+3. Gửi cho bot: Ví dụ :  ```wordpess là gì```
+<img width="1210" height="956" alt="image" src="https://github.com/user-attachments/assets/1c32ffbe-e256-43e2-8246-6288a252e1c6" />
+
+4. Nếu thành công, node sẽ xuất hiện Output
+<img width="1919" height="1079" alt="Screenshot 2026-05-21 235219" src="https://github.com/user-attachments/assets/65b273da-5906-44c1-88d6-137dca822381" />
+
 
 #### 🔷 Node 3: Code in JavaScript
 
 ```javascript
 // 1. Lấy dữ liệu gốc từ DeepSeek trả về
-const rawText = $input.first().json.text;
+const rawText = $json.message.content;
 
 // 2. Làm sạch JSON (loại bỏ markdown code fence nếu có)
 const cleaned = rawText
@@ -387,34 +457,89 @@ return {
   content: cleanData.post_content,
 };
 ```
+<img width="1696" height="1019" alt="image" src="https://github.com/user-attachments/assets/9580722e-1f7d-42d3-835e-9c133dbe35e8" />
+
+##### 📌 Test Output
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/c2631b4f-0315-48da-b517-36ac51da0f96" />
+
 
 #### 🔷 Node 4: WordPress – Create a Post
 
 | Trường | Giá trị |
 |---|---|
-| Credential | Tạo mới (xem bên dưới) |
+| Credential | Tạo mới → WordPress account |
+| Resource | `Post` |
+| Operation | `Create` |
 | WordPress URL | `https://wordpress.nhukhiem.id.vn/` |
-| Ignore SSL Issues | **BẬT** |
-| Title | Kéo `title` từ node trước vào |
-| Content | Kéo `content` từ node trước vào |
-| Status | `Publish` |
+| Ignore SSL Issues | `true` |
+| Title | `{{ $json.title }}` |
+| Content | `{{ $json.content }}` |
+| Status | `Publish` hoặc `Draft` |
 
-**Cấu hình WordPress Credential:**
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/84b3b66f-0a2d-4295-9667-cee02e7eba5f" />
+
+---
+
+### 🔷 Cấu hình WordPress Credential
 
 | Trường | Giá trị |
 |---|---|
 | WordPress URL | `https://wordpress.nhukhiem.id.vn/` |
-| Username | *(username admin WordPress)* |
-| Password | *(chuỗi 24 ký tự Application Password)* |
+| Username | Username admin WordPress |
+| Password | Application Password WordPress |
 | Ignore SSL Issues | `true` |
 
-#### 🔷 Publish Workflow
-
-Bấm nút **"Publish"** (góc trên phải) để workflow hoạt động.
-
-> ✅ Sau khi Publish, mỗi tin nhắn gửi đến Telegram Bot sẽ tự động kích hoạt toàn bộ workflow.
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/4c96feeb-db5f-4be2-8439-dc591b4c36d5" />
 
 ---
+
+### 🔷 Mapping dữ liệu
+
+| Field WordPress | Giá trị |
+|---|---|
+| Title | `{{ $json.title }}` |
+| Content | `{{ $json.content }}` |
+
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/ad3e5079-6f89-402d-b34d-8b96942936e0" />
+
+
+---
+
+### 🔷 Workflow hoàn chỉnh
+
+```text
+Telegram Trigger
+    ↓
+DeepSeek Create Chat Completion
+    ↓
+Code
+    ↓
+WordPress Create Post
+```
+
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/160a15b8-4d49-493a-ae2d-ffdc87210a58" />
+
+---
+
+### 🔷 Publish Workflow
+
+Bấm:
+
+```text
+Publish
+```
+
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/5c357fdf-67ee-4051-997a-d70ce70875d0" />
+
+
+---
+
+### 🔷 Cách hoạt động
+
+1. Gửi tin nhắn Telegram
+2. DeepSeek sinh bài viết HTML
+3. Code node parse JSON
+4. WordPress tự đăng bài
 
 ## 🎯 Kết Quả Đạt Được
 
@@ -435,7 +560,6 @@ graph LR
 - [x] WordPress public tại `https://wordpress.nhukhiem.id.vn`
 - [x] phpMyAdmin public tại `https://phpmyadmin.nhukhiem.id.vn`
 - [x] N8N public tại `https://n8n.nhukhiem.id.vn`
-- [x] 2 bài viết thủ công đã được tạo trong WordPress
 - [x] N8N License đã được Activate
 - [x] Workflow 4 nodes đã được Publish
 - [x] Chat Telegram Bot → bài viết tự động lên WordPress
@@ -459,17 +583,6 @@ graph LR
 - Thêm Telegram bot phản hồi xác nhận khi bài viết đã được đăng thành công
 - Thêm System Message tốt hơn để AI sinh nội dung chuẩn SEO
 
----
-
-## 📚 Tài Liệu Tham Khảo
-
-- [N8N Documentation](https://docs.n8n.io/)
-- [WordPress REST API](https://developer.wordpress.org/rest-api/)
-- [DeepSeek API Reference](https://platform.deepseek.com/api-docs)
-- [Cloudflare Tunnel Docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
-- [Telegram Bot API](https://core.telegram.org/bots/api)
-
----
 
 <div align="center">
 
