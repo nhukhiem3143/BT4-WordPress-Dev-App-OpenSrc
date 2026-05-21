@@ -240,7 +240,9 @@ docker compose up -d
 docker compose ps
 ```
 
-**Kết quả mong đợi – tất cả `STATUS` phải là `running`:**
+**Kết quả:**
+
+<img width="1595" height="261" alt="image" src="https://github.com/user-attachments/assets/49750236-f469-4e93-b6b8-dd4086382886" />
 
 ---
 
