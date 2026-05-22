@@ -201,7 +201,14 @@ PHPMYADMIN_PORT=8083
 N8N_PORT=5678
 
 # === N8N ===
-N8N_WEBHOOK_URL=
+N8N_WEBHOOK_URL=https://n8n.nhukhiem.id.vn/
+N8N_HOST=n8n.nhukhiem.id.vn
+N8N_PROTOCOL=https
+N8N_EDITOR_BASE_URL=https://n8n.nhukhiem.id.vn
+
+
+# === WORDPRESS CONFIG EXTRA (Optional) ===
+WORDPRESS_CONFIG_EXTRA=define('FORCE_SSL_ADMIN', true);
 
 # === CLOUDFLARED TUNNEL ===
 CLOUDFLARED_TUNNEL_TOKEN=
@@ -215,7 +222,6 @@ TZ=Asia/Ho_Chi_Minh
 ---
 
 ### Bước 2 – Chạy Docker Compose
-
 
 #### Pull tất cả images
 ```bash
