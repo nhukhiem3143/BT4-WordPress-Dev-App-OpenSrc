@@ -31,7 +31,7 @@
   - [Bước 4 – Tạo WordPress Application Password](#bước-4--tạo-wordpress-application-password)
   - [Bước 5 – Build Workflow](#bước-5--build-workflow)
 - [7. Kết quả đạt được](#-kết-quả-đạt-được)
-- 8. [Nhận xét](#-nhận-xét)
+- [8. Nhận xét](#-nhận-xét)
 
 ---
 
