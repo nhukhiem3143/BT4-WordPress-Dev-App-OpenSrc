@@ -13,13 +13,13 @@
 
 ---
 
-## 📋 Mục Lục
+# 📋 Mục Lục
 
 - [Giới thiệu](#-giới-thiệu)
 - [Kiến trúc hệ thống](#-kiến-trúc-hệ-thống)
 - [Yêu cầu hệ thống](#-yêu-cầu-hệ-thống)
 - [Cấu trúc thư mục](#-cấu-trúc-thư-mục)
-- [Hướng dẫn triển khai](#-hướng-dẫn-triển-khai)
+- [Các bước triển khai](#-các-bước-triển-khai)
   - [Bước 1 – Clone & cấu hình môi trường](#bước-1--clone--cấu-hình-môi-trường)
   - [Bước 2 – Chạy Docker Compose](#bước-2--chạy-docker-compose)
   - [Bước 3 – Cấu hình Cloudflare Tunnel](#bước-3--cấu-hình-cloudflare-tunnel)
@@ -35,7 +35,7 @@
 
 ---
 
-## 📖 Giới Thiệu
+# 📖 Giới Thiệu
 
 Bài tập 4 mở rộng từ BT3 bằng cách **bổ sung service N8N** vào hệ thống Docker Compose, sau đó xây dựng một **workflow tự động hoàn chỉnh**:
 
@@ -45,64 +45,17 @@ Bài tập 4 mở rộng từ BT3 bằng cách **bổ sung service N8N** vào h�
 
 | Service | Image | Vai trò |
 |---|---|---|
-| `mariadb` | `mariadb:latest` | Cơ sở dữ liệu |
-| `phpmyadmin` | `phpmyadmin:latest` | Quản trị CSDL qua giao diện web |
-| `wordpress` | `wordpress:latest` | CMS – trang web chính |
+| `mariadb` | `mariadb:10.11` | Cơ sở dữ liệu |
+| `phpmyadmin` | `phpmyadmin:5.2` | Quản trị CSDL qua giao diện web |
+| `wordpress` | `wordpress:6.4-php8.1-apache` | CMS – trang web chính |
 | `cloudflared` | `cloudflare/cloudflared:latest` | Tunnel public ra Internet |
 | `n8n` | `n8nio/n8n:latest` | Automation workflow engine |
 
 ---
 
-## 🏗️ Kiến Trúc Hệ Thống
+# 🏗️ Kiến Trúc Hệ Thống
 
-### Sơ đồ hạ tầng Docker
-
-```mermaid
-graph TB
-    subgraph Internet
-        USER["👤 Người dùng"]
-        TGBOT["📱 Telegram Bot"]
-        DS["🤖 DeepSeek AI"]
-        CF["☁️ Cloudflare DNS"]
-    end
-
-    subgraph "Ubuntu Server"
-        subgraph "Docker Network: wordpress_network"
-            CFD["cloudflared\nTunnel Agent"]
-            WP["wordpress:latest\n:8080"]
-            PMA["phpmyadmin:latest\n:8083"]
-            N8N["n8nio/n8n:latest\n:5678"]
-            DB["mariadb:10.11\n:3306"]
-        end
-
-        subgraph "Volumes (Persistent)"
-            V1[("./volumes/mariadb")]
-            V2[("./volumes/wordpress")]
-            V3[("./volumes/phpmyadmin")]
-            V4[("./volumes/n8n")]
-        end
-    end
-
-    USER -->|"https://wordpress.nhukhiem.id.vn"| CF
-    USER -->|"https://phpmyadmin.nhukhiem.id.vn"| CF
-    USER -->|"https://n8n.nhukhiem.id.vn"| CF
-
-    CF -->|Route| CFD
-    CFD -->|":8080"| WP
-    CFD -->|":8083"| PMA
-    CFD -->|":5678"| N8N
-
-    WP --> DB
-    PMA --> DB
-    N8N --> WP
-
-    DB --- V1
-    WP --- V2
-    PMA --- V3
-    N8N --- V4
-```
-
-### Sơ đồ N8N Workflow
+## Sơ đồ N8N Workflow
 
 ```mermaid
 flowchart LR
@@ -116,29 +69,19 @@ flowchart LR
     style D fill:#21759B,color:#fff
 ```
 
-### Luồng dữ liệu chi tiết
+## Workflow tổng thể
 
 ```mermaid
-sequenceDiagram
-    actor U as 👤 Người dùng
-    participant T as 📱 Telegram Bot
-    participant N as ⚙️ N8N
-    participant D as 🤖 DeepSeek AI
-    participant W as 📝 WordPress
-
-    U->>T: Nhắn nội dung chủ đề bài viết
-    T->>N: Trigger webhook (message.text)
-    N->>D: Gửi Prompt + yêu cầu trả JSON
-    D-->>N: {"post_title": "...", "post_content": "..."}
-    N->>N: Code JS parse JSON
-    N->>W: Create Post (title + HTML content)
-    W-->>N: Post ID + URL
-    Note over W: Bài viết Published 🎉
+graph LR
+    A["📱 Nhắn tin\nTelegram Bot"] -->|"Webhook Trigger"| B["⚙️ N8N\nWorkflow"]
+    B -->|"Prompt"| C["🤖 DeepSeek AI"]
+    C -->|"JSON Response"| B
+    B -->|"REST API"| D["📝 WordPress"]
+    D -->|"Bài viết Published"| E["🌐 wordpress\n.nhukhiem.id.vn"]
 ```
-
 ---
 
-## 💻 Yêu Cầu Hệ Thống
+# 💻 Yêu Cầu Hệ Thống
 
 | Thành phần | Phiên bản tối thiểu |
 |---|---|
@@ -152,7 +95,7 @@ sequenceDiagram
 
 ---
 
-## 📁 Cấu Trúc Thư Mục
+# 📁 Cấu Trúc Thư Mục
 
 ```
 BT4-WordPress-N8N/
@@ -169,9 +112,9 @@ BT4-WordPress-N8N/
 
 ---
 
-## 🚀 Hướng Dẫn Triển Khai
+# 🚀 Các Bước Triển Khai
 
-### Bước 1 – Clone & Cấu Hình Môi Trường
+## Bước 1 – Clone & Cấu Hình Môi Trường
 
 ```bash
 # Clone repository
@@ -221,21 +164,14 @@ TZ=Asia/Ho_Chi_Minh
 
 ---
 
-### Bước 2 – Chạy Docker Compose
+## Bước 2 – Chạy Docker Compose
 
-#### Pull tất cả images
-```bash
-docker compose pull
-```
-
-<img width="1145" height="274" alt="image" src="https://github.com/user-attachments/assets/82c61cd1-132f-425a-885c-8640f8382ad7" />
-
-#### Khởi chạy tất cả services ở chế độ nền
+### Khởi chạy tất cả services ở chế độ nền
 ```bash
 docker compose up -d
 ```
 
-##### Kiểm tra trạng thái các service
+#### Kiểm tra trạng thái các service
 ```bash
 docker compose ps
 ```
@@ -246,7 +182,7 @@ docker compose ps
 
 ---
 
-### Bước 3 – Cấu Hình Cloudflare Tunnel
+## Bước 3 – Cấu Hình Cloudflare Tunnel
 
 Truy cập **Cloudflare Dashboard → Zero Trust → Networks → Tunnels → wordpress-tunnel → Configure → Public Hostnames**
 
@@ -258,39 +194,80 @@ Thêm **3 router** như sau:
 | `phpmyadmin.nhukhiem.id.vn` | `http://phpmyadmin:80` | Thêm mới |
 | `n8n.nhukhiem.id.vn` | `http://n8n:5678` | Thêm mới |
 
-##### Thêm tunnel cho phpmyadmin
+#### Thêm tunnel cho phpmyadmin
 <img width="1913" height="1079" alt="image" src="https://github.com/user-attachments/assets/9070cdf8-a285-4995-b71e-fc87b8f0e4eb" />
 
-##### Thêm tunnel cho n8n
+#### Thêm tunnel cho n8n
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/3598f577-6cfa-4cf0-b4f3-3ce2dff90703" />
 
-##### Kết quả 
+#### Kết quả 
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/9b9b08ff-29f3-4519-80f6-ccafc474e3c3" />
 
 
 > 💡 Tên service trong URL tunnel phải khớp với tên service trong `docker-compose.yml`.
 
 ---
-### Bước 4 – Cài Đặt WordPress ( Đã cài ở bt3 )
+## Bước 4 – Cài Đặt WordPress ( Đã cài ở bt3 )
+### 1. Trang admin - WordPress
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/608b57b5-01df-4c22-8c44-7263ea57c950" />
 
+### 2. Trang phpmyadmin
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/39352124-2725-492a-b41c-6331575fc1fe" />
 
-#### Tạo 2 bài viết thủ công trong WordPress:**
-##### Trang 1: Giới thiệu bản thân
+### 3. Tạo 2 bài viết thủ công trong WordPress
 
-<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/636c8329-59b2-4953-abf5-7bb51748912a" />
-<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/efdcf396-5e59-4591-bee2-aa609d108953" />
+Sau khi cài đặt WordPress thành công, tiến hành tạo nội dung bằng cách sử dụng **Custom HTML Block** trong trình soạn thảo.
 
-##### Trang 2: Kiến thức học được từ môn Phát triển ứng dụng với mã nguồn mở
-<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/18787dcd-d497-4c6c-8a32-acc1e2a04bc3" />
-<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/9d1c41e1-cb38-4a0e-b4ed-e893a79d1018" />
-<img width="1913" height="1079" alt="image" src="https://github.com/user-attachments/assets/1a814999-9ec5-47ec-9ce7-16c8e5ecd744" />
-<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/ba1624e3-79b1-41d9-997c-828f028eab9f" />
+#### Cách sử dụng Custom HTML Block
+
+- Truy cập trang quản trị WordPress.
+- Chọn:
+  - **Posts → Add New Post** để tạo Post
+- Trong trình chỉnh sửa:
+  - Nhấn dấu **+**
+  - Tìm kiếm **Custom HTML**
+  - Chọn block **Custom HTML**
+- Nhập mã HTML trực tiếp vào block.
+- Có thể nhấn **Preview** để xem trước nội dung hiển thị.
+- Nhấn **Publish** để xuất bản.
+
+<img width="1919" height="981" alt="image" src="https://github.com/user-attachments/assets/27e0e5f1-fad1-469a-98f4-720ae628578c" />
 
 ---
-## ⚙️ Cấu Hình N8N
 
-### Bước 1 – Tạo Tài Khoản & Activate License
+#### Trang 1: Giới thiệu bản thân
+
+Tạo một Page với tiêu đề:
+
+> Giới thiệu bản thân
+
+<img width="1919" height="1034" alt="image" src="https://github.com/user-attachments/assets/15dd0c5b-7090-4146-9318-67839668aa65" />
+<img width="1919" height="1036" alt="image" src="https://github.com/user-attachments/assets/4f110649-de00-49b2-87d5-93514b5df97f" />
+
+---
+
+#### Trang 2: Kiến thức học được từ môn Phát triển ứng dụng với mã nguồn mở
+
+Tạo một Post với tiêu đề:
+> Những kiến thức học được từ môn Phát triển ứng dụng với mã nguồn mở
+<img width="1919" height="1038" alt="image" src="https://github.com/user-attachments/assets/b0d65097-d7dc-4dde-a0f7-1ebf0e0c36b9" />
+<img width="1919" height="1036" alt="image" src="https://github.com/user-attachments/assets/e245f15f-61e3-470c-b8aa-f099392d8e3c" />
+<img width="1919" height="1032" alt="image" src="https://github.com/user-attachments/assets/3a186f53-1629-4b67-ade5-f5b60ed700b1" />
+<img width="1919" height="1036" alt="image" src="https://github.com/user-attachments/assets/ab00fae4-cbfd-4b0d-b597-fc895648474f" />
+<img width="1919" height="1033" alt="image" src="https://github.com/user-attachments/assets/0d843322-c033-4709-bc90-663d27150a94" />
+
+---
+
+#### Kết quả đạt được
+```
+- Tạo thành công 1 Page và 1 Post trong WordPress.
+- Biết sử dụng trình quản trị WordPress để quản lý nội dung.
+- Thực hành thao tác chèn văn bản, hình ảnh, video và xuất bản nội dung.
+```
+---
+# ⚙️ Cấu Hình N8N
+
+## Bước 1 – Tạo Tài Khoản & Activate License
 
 **Tạo tài khoản admin:**
 1. Truy cập `https://n8n.nhukhiem.id.vn`
@@ -315,7 +292,7 @@ SETTING (góc dưới trái) → Usage and Plan → Enter activation key → Pas
 
 ---
 
-### Bước 2 – Tạo Telegram Bot
+## Bước 2 – Tạo Telegram Bot
 
 1. Mở Telegram → tìm kiếm **@BotFather** → bắt đầu chat
 2. Gõ lệnh `/newbot`
@@ -327,12 +304,12 @@ SETTING (góc dưới trái) → Usage and Plan → Enter activation key → Pas
 
 > ⚠️ **Quan trọng:** Sau khi tạo bot, phải **chat lần đầu** với bot (nội dung bất kỳ) trước khi dùng trong n8n, nếu không webhook sẽ không nhận được message.
 
-#### Bot vừa tạo
+### Bot vừa tạo
 <img width="1225" height="994" alt="image" src="https://github.com/user-attachments/assets/df58bb00-dd81-46ef-a8e0-1831325a7cbb" />
 
 ---
 
-### Bước 3 – Lấy DeepSeek API Key
+## Bước 3 – Lấy DeepSeek API Key
 
 1. Truy cập `https://platform.deepseek.com`
 2. Đăng nhập / Đăng ký tài khoản
@@ -343,7 +320,7 @@ SETTING (góc dưới trái) → Usage and Plan → Enter activation key → Pas
 
 ---
 
-### Bước 4 – Tạo WordPress Application Password
+## Bước 4 – Tạo WordPress Application Password
 
 1. Truy cập `https://wordpress.nhukhiem.id.vn/wp-admin`
 2. **Users → Profile** (hoặc vào tài khoản admin)
@@ -356,11 +333,11 @@ SETTING (góc dưới trái) → Usage and Plan → Enter activation key → Pas
 
 ---
 
-### Bước 5 – Build Workflow
+## Bước 5 – Build Workflow
 
 Truy cập `https://n8n.nhukhiem.id.vn` → **Overview → Create Workflow**
 
-#### 🔷 Node 1: Telegram Trigger
+### 🔷 Node 1: Telegram Trigger
 
 | Trường | Giá trị |
 |---|---|
@@ -375,7 +352,7 @@ Truy cập `https://n8n.nhukhiem.id.vn` → **Overview → Create Workflow**
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/fdeac4eb-c52d-4ee0-9eef-c77ac30000c2" />
 
 
-##### 📌 Test Trigger
+#### 📌 Test Trigger
 
 1. Nhấn `Test This Trigger`
 2. Mở Telegram
@@ -388,7 +365,7 @@ Truy cập `https://n8n.nhukhiem.id.vn` → **Overview → Create Workflow**
 5. Nếu thành công, node sẽ xuất hiện Output
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/5e5fc1df-6a23-4d7d-b6a0-de5a0baa365a" />
 
-#### 🔷 Node 2: DeepSeek – Message a Model
+### 🔷 Node 2: DeepSeek – Message a Model
 
 
 | Trường | Giá trị |
@@ -401,10 +378,9 @@ Truy cập `https://n8n.nhukhiem.id.vn` → **Overview → Create Workflow**
 
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/7ae1a408-ab5e-404b-a545-6abb2db2145d" />
 
-
 ---
 
-##### 🔷 Prompt Message 1
+#### 🔷 Prompt Message 1
 
 | Trường | Giá trị |
 |---|---|
@@ -418,7 +394,7 @@ Bạn là trợ lý viết bài blog chuyên nghiệp bằng tiếng Việt.  Nh
 
 ---
 
-##### 🔷 Prompt Message 2
+#### 🔷 Prompt Message 2
 
 Bấm:
 
@@ -447,7 +423,7 @@ Trả về JSON với 2 trường:
 
 ---
 
-##### 📌 Test Deepseek
+#### 📌 Test Deepseek
 
 1. Nhấn `Execute step`
 2. Mở Telegram
@@ -458,7 +434,7 @@ Trả về JSON với 2 trường:
 <img width="1919" height="1079" alt="Screenshot 2026-05-21 235219" src="https://github.com/user-attachments/assets/65b273da-5906-44c1-88d6-137dca822381" />
 
 
-#### 🔷 Node 3: Code in JavaScript
+### 🔷 Node 3: Code in JavaScript
 
 ```javascript
 // 1. Lấy dữ liệu gốc từ DeepSeek trả về
@@ -481,11 +457,11 @@ return {
 ```
 <img width="1696" height="1019" alt="image" src="https://github.com/user-attachments/assets/9580722e-1f7d-42d3-835e-9c133dbe35e8" />
 
-##### 📌 Test Output
+#### 📌 Test Output
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/c2631b4f-0315-48da-b517-36ac51da0f96" />
 
 
-#### 🔷 Node 4: WordPress – Create a Post
+### 🔷 Node 4: WordPress – Create a Post
 
 | Trường | Giá trị |
 |---|---|
@@ -503,7 +479,7 @@ return {
 
 ---
 
-### 🔷 Cấu hình WordPress Credential
+## 🔷 Cấu hình WordPress Credential
 
 | Trường | Giá trị |
 |---|---|
@@ -516,7 +492,7 @@ return {
 
 ---
 
-### 🔷 Mapping dữ liệu
+## 🔷 Mapping dữ liệu
 
 | Field WordPress | Giá trị |
 |---|---|
@@ -528,7 +504,7 @@ return {
 
 ---
 
-### 🔷 Workflow hoàn chỉnh
+## 🔷 Workflow hoàn chỉnh
 
 ```text
 Telegram Trigger
@@ -544,7 +520,7 @@ WordPress Create Post
 
 ---
 
-### 🔷 Publish Workflow
+## 🔷 Publish Workflow
 
 Bấm:
 
@@ -554,39 +530,33 @@ Publish
 
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/5c357fdf-67ee-4051-997a-d70ce70875d0" />
 
-### Kết quả
-#### Bài đăng Wordpress
+# 🎯 Kết Quả Đạt Được
+## Bài đăng Wordpress
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/6cee29fe-605d-47f7-8e49-21089dd0e84f" />
 
-#### Trang phpMyadmin
+## Trang phpMyadmin
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/a763d40d-a90a-437e-9709-88cd1ce68b69" />
 
-#### Trang N8N
+## Trang N8N
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/fe84be6f-63f1-4e5f-b672-c0acb979859d" />
+
+## Tạo bài đăng mới
+### Nhắn với telegram
+<img width="1919" height="1034" alt="image" src="https://github.com/user-attachments/assets/3be5cea4-8b33-44db-96bc-27e8568f35e6" />
+
+### Bài viết được tạo
+<img width="1919" height="1041" alt="image" src="https://github.com/user-attachments/assets/5c60328c-252b-47c0-ad7b-3272e9dbae59" />
 
 ---
 
-### 🔷 Cách hoạt động
+## 🔷 Cách hoạt động
 
 1. Gửi tin nhắn Telegram
 2. DeepSeek sinh bài viết HTML
 3. Code node parse JSON
 4. WordPress tự đăng bài
 
-## 🎯 Kết Quả Đạt Được
-
-### Workflow tổng thể
-
-```mermaid
-graph LR
-    A["📱 Nhắn tin\nTelegram Bot"] -->|"Webhook Trigger"| B["⚙️ N8N\nWorkflow"]
-    B -->|"Prompt"| C["🤖 DeepSeek AI"]
-    C -->|"JSON Response"| B
-    B -->|"REST API"| D["📝 WordPress"]
-    D -->|"Bài viết Published"| E["🌐 wordpress\n.nhukhiem.id.vn"]
-```
-
-### Checklist hoàn thành
+## Checklist hoàn thành
 
 - [x] 5 service Docker chạy ổn định, không restart
 - [x] WordPress public tại `https://wordpress.nhukhiem.id.vn`
@@ -598,7 +568,7 @@ graph LR
 
 ---
 
-## 💬 Nhận Xét
+# 💬 Nhận Xét
 
 **Những gì đạt được:**
 - Xây dựng thành công pipeline tự động hóa hoàn chỉnh từ đầu đến cuối
@@ -615,11 +585,6 @@ graph LR
 - Thêm Telegram bot phản hồi xác nhận khi bài viết đã được đăng thành công
 - Thêm System Message tốt hơn để AI sinh nội dung chuẩn SEO
 
-
 <div align="center">
-
 **BT3 Repository:** [nhukhiem3143/BT3-WordPress--Dev-App-OpenSrc](https://github.com/nhukhiem3143/BT3-WordPress--Dev-App-OpenSrc)
-
-Made with ❤️ by Như Khiêm – 58KTPM
-
 </div>
