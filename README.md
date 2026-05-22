@@ -265,32 +265,21 @@ Thêm **3 router** như sau:
 > 💡 Tên service trong URL tunnel phải khớp với tên service trong `docker-compose.yml`.
 
 ---
-### Bước 4 – Cài Đặt WordPress
+### Bước 4 – Cài Đặt WordPress ( Đã cài ở bt3 )
 
-**1. Kiểm tra CSDL trước khi cài:**
-- Truy cập `https://phpmyadmin.nhukhiem.id.vn`
-- Đăng nhập với user/password từ `.env`
-- Quan sát: database `wordpress_db` **chưa có bảng nào**
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/39352124-2725-492a-b41c-6331575fc1fe" />
 
-**2. Cài đặt WordPress:**
-- Truy cập `https://wordpress.nhukhiem.id.vn`
-- Làm theo wizard cài đặt của WordPress
-- Điền thông tin: Tên site, admin, mật khẩu, email
+#### Tạo 2 bài viết thủ công trong WordPress:**
+##### Trang 1: Giới thiệu bản thân
 
-**3. Kiểm tra CSDL sau khi cài:**
-- Quay lại phpMyAdmin
-- Quan sát: database đã có **11 bảng** do WordPress tạo tự động
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/636c8329-59b2-4953-abf5-7bb51748912a" />
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/efdcf396-5e59-4591-bee2-aa609d108953" />
 
-```
-wp_commentmeta    wp_comments      wp_links
-wp_options        wp_postmeta      wp_posts
-wp_term_relationships  wp_term_taxonomy  wp_termmeta
-wp_terms          wp_usermeta      wp_users
-```
-
-**4. Tạo 2 bài viết thủ công trong WordPress:**
-- Bài 1: Giới thiệu bản thân (thông tin cá nhân, sở thích, có hình ảnh/video)
-- Bài 2: Kiến thức học được từ môn Phát triển ứng dụng với mã nguồn mở
+##### Trang 2: Kiến thức học được từ môn Phát triển ứng dụng với mã nguồn mở
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/18787dcd-d497-4c6c-8a32-acc1e2a04bc3" />
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/9d1c41e1-cb38-4a0e-b4ed-e893a79d1018" />
+<img width="1913" height="1079" alt="image" src="https://github.com/user-attachments/assets/1a814999-9ec5-47ec-9ce7-16c8e5ecd744" />
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/ba1624e3-79b1-41d9-997c-828f028eab9f" />
 
 ---
 ## ⚙️ Cấu Hình N8N
