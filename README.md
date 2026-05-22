@@ -15,23 +15,27 @@
 
 # Mục Lục
 
-- [1. Giới thiệu](#-giới-thiệu)
-- [2. Kiến trúc hệ thống](#-kiến-trúc-hệ-thống)
-- [3. Yêu cầu hệ thống](#-yêu-cầu-hệ-thống)
-- [4. Cấu trúc thư mục](#-cấu-trúc-thư-mục)
-- [5. Các bước triển khai](#-các-bước-triển-khai)
+- [1. Giới thiệu](#1-giới-thiệu)
+- [2. Kiến trúc hệ thống](#2-kiến-trúc-hệ-thống)
+- [3. Yêu cầu hệ thống](#3-yêu-cầu-hệ-thống)
+- [4. Cấu trúc thư mục](#4-cấu-trúc-thư-mục)
+- [5. Các bước triển khai](#5-các-bước-triển-khai)
+
   - [Bước 1 – Clone & cấu hình môi trường](#bước-1--clone--cấu-hình-môi-trường)
   - [Bước 2 – Chạy Docker Compose](#bước-2--chạy-docker-compose)
   - [Bước 3 – Cấu hình Cloudflare Tunnel](#bước-3--cấu-hình-cloudflare-tunnel)
   - [Bước 4 – Cài đặt WordPress](#bước-4--cài-đặt-wordpress)
-- [6. Cấu hình N8N](#-cấu-hình-n8n)
+
+- [6. Cấu hình N8N](#6-cấu-hình-n8n)
+
   - [Bước 1 – Tạo tài khoản & Activate License](#bước-1--tạo-tài-khoản--activate-license)
   - [Bước 2 – Tạo Telegram Bot](#bước-2--tạo-telegram-bot)
   - [Bước 3 – Lấy DeepSeek API Key](#bước-3--lấy-deepseek-api-key)
   - [Bước 4 – Tạo WordPress Application Password](#bước-4--tạo-wordpress-application-password)
   - [Bước 5 – Build Workflow](#bước-5--build-workflow)
-- [7. Kết quả đạt được](#-kết-quả-đạt-được)
-- [8. Nhận xét](#-nhận-xét)
+
+- [7. Kết quả đạt được](#7-kết-quả-đạt-được)
+- [8. Nhận xét](#8-nhận-xét)
 
 ---
 
