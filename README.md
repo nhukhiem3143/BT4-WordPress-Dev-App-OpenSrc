@@ -13,29 +13,29 @@
 
 ---
 
-# 📋 Mục Lục
+# Mục Lục
 
-- [Giới thiệu](#-giới-thiệu)
-- [Kiến trúc hệ thống](#-kiến-trúc-hệ-thống)
-- [Yêu cầu hệ thống](#-yêu-cầu-hệ-thống)
-- [Cấu trúc thư mục](#-cấu-trúc-thư-mục)
-- [Các bước triển khai](#-các-bước-triển-khai)
+- [1. Giới thiệu](#-giới-thiệu)
+- [2. Kiến trúc hệ thống](#-kiến-trúc-hệ-thống)
+- [3. Yêu cầu hệ thống](#-yêu-cầu-hệ-thống)
+- [4. Cấu trúc thư mục](#-cấu-trúc-thư-mục)
+- [5. Các bước triển khai](#-các-bước-triển-khai)
   - [Bước 1 – Clone & cấu hình môi trường](#bước-1--clone--cấu-hình-môi-trường)
   - [Bước 2 – Chạy Docker Compose](#bước-2--chạy-docker-compose)
   - [Bước 3 – Cấu hình Cloudflare Tunnel](#bước-3--cấu-hình-cloudflare-tunnel)
   - [Bước 4 – Cài đặt WordPress](#bước-4--cài-đặt-wordpress)
-- [Cấu hình N8N](#-cấu-hình-n8n)
+- [6. Cấu hình N8N](#-cấu-hình-n8n)
   - [Bước 1 – Tạo tài khoản & Activate License](#bước-1--tạo-tài-khoản--activate-license)
   - [Bước 2 – Tạo Telegram Bot](#bước-2--tạo-telegram-bot)
   - [Bước 3 – Lấy DeepSeek API Key](#bước-3--lấy-deepseek-api-key)
   - [Bước 4 – Tạo WordPress Application Password](#bước-4--tạo-wordpress-application-password)
   - [Bước 5 – Build Workflow](#bước-5--build-workflow)
-- [Kết quả đạt được](#-kết-quả-đạt-được)
-- [Nhận xét](#-nhận-xét)
+- [7. Kết quả đạt được](#-kết-quả-đạt-được)
+- 8. [Nhận xét](#-nhận-xét)
 
 ---
 
-# 📖 Giới Thiệu
+# 1. Giới Thiệu
 
 Bài tập 4 mở rộng từ BT3 bằng cách **bổ sung service N8N** vào hệ thống Docker Compose, sau đó xây dựng một **workflow tự động hoàn chỉnh**:
 
@@ -53,7 +53,7 @@ Bài tập 4 mở rộng từ BT3 bằng cách **bổ sung service N8N** vào h�
 
 ---
 
-# 🏗️ Kiến Trúc Hệ Thống
+# 2. Kiến Trúc Hệ Thống
 
 ## Sơ đồ N8N Workflow
 
@@ -81,7 +81,7 @@ graph LR
 ```
 ---
 
-# 💻 Yêu Cầu Hệ Thống
+# 3. Yêu Cầu Hệ Thống
 
 | Thành phần | Phiên bản tối thiểu |
 |---|---|
@@ -95,7 +95,7 @@ graph LR
 
 ---
 
-# 📁 Cấu Trúc Thư Mục
+# 4. Cấu Trúc Thư Mục
 
 ```
 BT4-WordPress-N8N/
@@ -112,7 +112,7 @@ BT4-WordPress-N8N/
 
 ---
 
-# 🚀 Các Bước Triển Khai
+# 5. Các Bước Triển Khai
 
 ## Bước 1 – Clone & Cấu Hình Môi Trường
 
@@ -258,14 +258,14 @@ Tạo một Post với tiêu đề:
 
 ---
 
-#### Kết quả đạt được
+#### Kết quả
 ```
 - Tạo thành công 1 Page và 1 Post trong WordPress.
 - Biết sử dụng trình quản trị WordPress để quản lý nội dung.
 - Thực hành thao tác chèn văn bản, hình ảnh, video và xuất bản nội dung.
 ```
 ---
-# ⚙️ Cấu Hình N8N
+# 6. Cấu Hình N8N
 
 ## Bước 1 – Tạo Tài Khoản & Activate License
 
@@ -530,7 +530,7 @@ Publish
 
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/5c357fdf-67ee-4051-997a-d70ce70875d0" />
 
-# 🎯 Kết Quả Đạt Được
+# 7. Kết Quả Đạt Được
 ## Bài đăng Wordpress
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/6cee29fe-605d-47f7-8e49-21089dd0e84f" />
 
@@ -568,7 +568,7 @@ Publish
 
 ---
 
-# 💬 Nhận Xét
+# 8. Nhận Xét
 
 **Những gì đạt được:**
 - Xây dựng thành công pipeline tự động hóa hoàn chỉnh từ đầu đến cuối
@@ -585,6 +585,5 @@ Publish
 - Thêm Telegram bot phản hồi xác nhận khi bài viết đã được đăng thành công
 - Thêm System Message tốt hơn để AI sinh nội dung chuẩn SEO
 
-<div align="center">
-**BT3 Repository:** [nhukhiem3143/BT3-WordPress--Dev-App-OpenSrc](https://github.com/nhukhiem3143/BT3-WordPress--Dev-App-OpenSrc)
-</div>
+---
+# THE END
