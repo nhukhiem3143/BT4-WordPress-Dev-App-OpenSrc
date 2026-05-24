@@ -1,0 +1,104 @@
+services:
+
+  # ===== MARIADB DATABASE =====
+  mariadb:
+    image: mariadb:10.11
+    container_name: wordpress_mariadb
+    restart: always
+    environment:
+      TZ: ${TZ}
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MYSQL_DATABASE}
+      MARIADB_USER: ${MYSQL_USER}
+      MARIADB_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./volumes/mariadb:/var/lib/mysql
+    networks:
+      - wordpress_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # ===== PHPMYADMIN =====
+  phpmyadmin:
+    image: phpmyadmin:5.2
+    container_name: wordpress_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mariadb
+      PMA_ARBITRARY: 1
+    volumes:
+      - ./volumes/phpmyadmin:/var/www/html/sessions
+    networks:
+      - wordpress_network
+    ports:
+      - "${PHPMYADMIN_PORT}:80"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  # ===== WORDPRESS =====
+  wordpress:
+    image: wordpress:6.4-php8.1-apache
+    container_name: wordpress_app
+    restart: always
+    environment:
+      TZ: ${TZ}
+      WORDPRESS_DB_HOST: ${WORDPRESS_DB_HOST}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
+    volumes:
+      - ./volumes/wordpress:/var/www/html
+    networks:
+      - wordpress_network
+    ports:
+      - "${WORDPRESS_PORT}:80"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  # ===== CLOUDFLARE TUNNEL =====
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: wordpress_cloudflared
+    restart: always
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
+    networks:
+      - wordpress_network
+    depends_on:
+      - wordpress
+      - phpmyadmin
+      - n8n
+
+  # ===== N8N AUTOMATION =====
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: wordpress_n8n
+    restart: always
+    environment:
+      - TZ=${TZ}
+      - WEBHOOK_URL=${N8N_WEBHOOK_URL}
+      - N8N_SECURE_COOKIE=false
+      - GENERIC_TIMEZONE=${TZ}
+      - N8N_PROXY_HOPS=1
+      - EXPRESS_TRUST_PROXY=true
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PROTOCOL=${N8N_PROTOCOL}
+      - N8N_EDITOR_BASE_URL=${N8N_EDITOR_BASE_URL}
+    volumes:
+      - ./volumes/n8n:/home/node/.n8n
+    networks:
+      - wordpress_network
+    ports:
+      - "${N8N_PORT}:5678"
+    depends_on:
+      - wordpress
+
+networks:
+  wordpress_network:
+    driver: bridge
